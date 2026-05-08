@@ -44,9 +44,6 @@
     ${navLink('syllabus/index.html', '📋 Syllabus')}
     ${navLink('office-hours/index.html', '🕐 Office Hours')}
 
-    <div class="nav-section-label" style="margin-top:10px">Guides</div>
-    ${navLink('guides/markus.html', 'MarkUs Guide')}
-
     <div class="nav-section-label" style="margin-top:10px">Lecture Content</div>
     ${lecturesHtml}
   </nav>
