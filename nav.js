@@ -9,16 +9,6 @@
   const lectures = [
     { n: 1, date: 'May 5', title: 'Elements of the sampling problem' },
     { n: 2, date: 'May 7', title: 'Probability sampling & SRS' },
-    { n: 3, date: 'May 12', title: 'Inference under SRS' },
-    { n: 4, date: 'May 14', title: 'Stratified sampling inference' },
-    { n: 5, date: 'May 19', title: 'Ratio and regression estimation' },
-    { n: 6, date: 'May 21', title: 'Poststratification' },
-    { n: 7, date: 'May 26', title: 'Cluster sampling' },
-    { n: 8, date: 'May 28', title: 'Unequal probability sampling' },
-    { n: 9, date: 'June 2', title: 'Nonresponse & imputation' },
-    { n: 10, date: 'June 4', title: 'Survey quality & randomized response' },
-    { n: 11, date: 'June 9', title: 'Observational data & causality' },
-    { n: 12, date: 'June 11', title: 'Causal effects & propensity scores' },
   ];
 
   const cur = window.location.pathname;
