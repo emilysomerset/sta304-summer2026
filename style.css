@@ -316,6 +316,12 @@ table.sched .wk {
 }
 .pdf-btn:hover { background: var(--accent-soft); }
 .pdf-btn svg { flex-shrink: 0; }
+.resource-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
 
 /* ─── Prev/Next nav ───────────────────────────────── */
 .page-nav {

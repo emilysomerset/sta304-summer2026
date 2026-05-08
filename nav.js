@@ -6,19 +6,19 @@
   const script = document.currentScript;
   const root = script ? (script.getAttribute('data-root') || './') : './';
 
-  const weeks = [
-    { n: 1, date: 'TBD', lec: 'Week 1 Lecture', hw: 'Homework 1' },
-    { n: 2, date: 'TBD', lec: 'Week 2 Lecture', hw: 'Homework 2' },
-    { n: 3, date: 'TBD', lec: 'Week 3 Lecture', hw: 'Homework 3' },
-    { n: 4, date: 'TBD', lec: 'Week 4 Lecture', hw: 'Homework 4' },
-    { n: 5, date: 'TBD', lec: 'Week 5 Lecture', hw: 'Homework 5' },
-    { n: 6, date: 'TBD', lec: 'Week 6 Lecture', hw: 'Homework 6' },
-    { n: 7, date: 'TBD', lec: 'Week 7 Lecture', hw: 'Homework 7' },
-    { n: 8, date: 'TBD', lec: 'Week 8 Lecture', hw: 'Homework 8' },
-    { n: 9, date: 'TBD', lec: 'Week 9 Lecture', hw: 'Homework 9' },
-    { n: 10, date: 'TBD', lec: 'Week 10 Lecture', hw: 'Homework 10' },
-    { n: 11, date: 'TBD', lec: 'Week 11 Lecture', hw: 'Homework 11' },
-    { n: 12, date: 'TBD', lec: 'Week 12 Lecture', hw: 'Homework 12' },
+  const lectures = [
+    { n: 1, date: 'May 5', title: 'Elements of the sampling problem' },
+    { n: 2, date: 'May 7', title: 'Probability sampling & SRS' },
+    { n: 3, date: 'May 12', title: 'Inference under SRS' },
+    { n: 4, date: 'May 14', title: 'Stratified sampling inference' },
+    { n: 5, date: 'May 19', title: 'Ratio and regression estimation' },
+    { n: 6, date: 'May 21', title: 'Poststratification' },
+    { n: 7, date: 'May 26', title: 'Cluster sampling' },
+    { n: 8, date: 'May 28', title: 'Unequal probability sampling' },
+    { n: 9, date: 'June 2', title: 'Nonresponse & imputation' },
+    { n: 10, date: 'June 4', title: 'Survey quality & randomized response' },
+    { n: 11, date: 'June 9', title: 'Observational data & causality' },
+    { n: 12, date: 'June 11', title: 'Causal effects & propensity scores' },
   ];
 
   const cur = window.location.pathname;
@@ -32,13 +32,11 @@
     return `<a class="nav-link${active}" href="${root}${href}">${label}</a>`;
   }
 
-  const weeksHtml = weeks.map(w => {
-    const wStr = String(w.n).padStart(2, '0');
+  const lecturesHtml = lectures.map(l => {
     return `
     <details class="week-item">
-      <summary><span>Week ${w.n}</span><span class="chev">›</span></summary>
-      <a class="week-sub" href="${root}week${w.n}/lecture/">📄 ${w.lec}</a>
-      <a class="week-sub" href="${root}week${w.n}/homework/">📝 ${w.hw}</a>
+      <summary><span>Lecture ${l.n} — ${l.date}</span><span class="chev">›</span></summary>
+      <a class="week-sub" href="${root}week${l.n}/lecture/index.html">📄 ${l.title}</a>
     </details>`;
   }).join('');
 
@@ -59,8 +57,8 @@
     <div class="nav-section-label" style="margin-top:10px">Guides</div>
     ${navLink('guides/markus.html', 'MarkUs Guide')}
 
-    <div class="nav-section-label" style="margin-top:10px">Weekly Content</div>
-    ${weeksHtml}
+    <div class="nav-section-label" style="margin-top:10px">Lecture Content</div>
+    ${lecturesHtml}
   </nav>
   <div class="sidebar-footer">
     STA304 · University of Toronto<br>
