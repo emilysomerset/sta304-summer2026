@@ -429,3 +429,8 @@ blockquote {
   .content { padding: 24px 24px 40px; }
   .tile-grid { grid-template-columns: 1fr; }
 }
+
+ul ul {
+  padding-left: 1.5rem;
+  list-style-type: disc;
+}

@@ -47,7 +47,7 @@
   <a class="sidebar-brand" href="${root}index.html">
     <div class="brand-eyebrow">STA304</div>
     <div class="brand-name">Surveys, Sampling &amp;<br>Observational Data</div>
-    <div class="brand-term">Winter 2026</div>
+    <div class="brand-term">Summer 2026</div>
   </a>
   <nav class="sidebar-nav">
     <div class="nav-section-label">Course</div>
@@ -58,14 +58,13 @@
 
     <div class="nav-section-label" style="margin-top:10px">Guides</div>
     ${navLink('guides/markus.html', 'MarkUs Guide')}
-    ${navLink('guides/jupyterhub.html', 'JupyterHub Guide')}
 
     <div class="nav-section-label" style="margin-top:10px">Weekly Content</div>
     ${weeksHtml}
   </nav>
   <div class="sidebar-footer">
     STA304 · University of Toronto<br>
-    Winter 2026
+    Summer 2026
   </div>
 </aside>
 <div class="sidebar-overlay" id="overlay"></div>`;
