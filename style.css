@@ -295,7 +295,8 @@ table.sched .wk {
 }
 .badge-lec  { background: var(--accent-soft); color: var(--accent); }
 .badge-hw   { background: var(--amber-soft);  color: var(--amber); }
-.badge-test { background: var(--red-soft);    color: var(--red); }
+.badge-test { background: var(--red-soft);    color: var(--red); font-weight: 600; }
+.badge-due  { background: var(--red-soft);    color: var(--red); }
 .badge-sol  { background: var(--green-soft);  color: var(--green); }
 
 /* ─── PDF links ──────────────────────────────────── */
