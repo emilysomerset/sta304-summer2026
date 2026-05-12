@@ -1,0 +1,251 @@
+---
+title: "Baseball data: Learning Activity 3"
+format: pdf
+editor: visual
+---
+
+## Background
+
+This activity uses the **baseball** dataset (available in the *SDAResources* package). The dataset contains statistics on **797 baseball players** from the rosters of all major league teams in November 2004 (Forman, 2004).
+
+You will treat this file as a **population** and draw samples from it using simple random sampling.
+
+## Getting Started
+
+Loading the dataset and the R packages.
+
+```{r,message=FALSE}
+#| label: setup
+# Uncomment the install.packages("SDAResources") line to install the package. 
+# Comment it back after you install the package :) 
+# install.packages("SDAResources") 
+library(SDAResources)
+library(dplyr)
+
+data(baseball)         
+
+```
+
+## Exercise 1: Getting to know the data
+
+Before any analysis, always take a look at the data first.
+
+`head(data)` shows the first 6 rows by default (can change, `head(data, 10)` shows 10). `dim(data)` tells you the number of rows and columns.
+
+Try them both below. The data name is `baseball` and it is in a format we call a "data frame".
+
+```{r}
+# Include your code here
+
+
+
+
+
+
+
+
+
+```
+
+## Exercise 2: Learning how to subset, generate numbers, and take an SRS
+
+Suppose you wanted to select the 1st and 5th row from the baseball data frame and save it as `baseball_subset`. You would:
+
+```{r}
+baseball_subset <- baseball[c(1, 5), ]
+
+# c() creates a vector of values, e.g. c(1, 5) or c(1, 2, 3, 4, 5).
+# baseball is a 2D data frame with rows and columns.
+# baseball[c(1, 5), ] filters the data to keep only the 1st and 5th rows.
+# baseball[, 5] keeps only the 5th column (keeping all the rows).
+
+baseball_subset
+```
+
+The function `sample(x, size, replace = FALSE)` draws `size` elements from the vector `x`, either with replacement (`replace = TRUE`) or without replacement (`replace = FALSE`). For example, if I wanted to select 5 numbers from 1 to 5 without replacement I would:
+
+```{r}
+set.seed(2)
+sample(1:5, 5, replace = FALSE)
+
+# set.seed(number) makes your sample reproducible.
+# It will always produce the same result each time you run this code.
+# number1:number2 creates a sequence from number1 to number2 with step size 1. 
+
+```
+
+Take an SRS of 150 players from the baseball data frame without replacement. Save your sample as `baseball_srs` for use in future exercises. Don't forget to set your seed.
+
+```{r}
+# Include your code here
+
+
+
+
+
+
+
+
+
+
+
+```
+
+In words, describe the process of selecting an SRS below:
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Exercise 3: Mutating variables and creating histograms
+
+`mutate()` creates new columns that are functions of existing variables. Think of it as adding a new column to your spreadsheet based on existing ones. For example, let's create a new binary column for `run > 50`:
+
+```{r}
+
+baseball <- baseball %>% # this is a fancy piping operator 
+  mutate(run_above50 = run > 50)
+
+# View the results
+baseball %>% 
+  select(run, run_above50) %>% # selects columns with these names
+  head(5)
+
+# You can also select a column like this using the $ symbol
+
+baseball$run[1:5] #selecting the first 5 values of run 
+```
+
+Salaries are often right-skewed, with a small number of individuals earning substantially more than the rest. Taking the natural logarithm can make the distribution more symmetric, which is helpful when constructing confidence intervals that rely on the Central Limit Theorem. Create a new column in your **`baseball_srs`** called `logsal = log(salary)`. Construct a histogram of the variables `salary` and `logsal` from your SRS using the `hist()` function.
+
+```{r}
+# Include your code here. The function hist() will help you plot a basic histogram. 
+
+
+
+
+
+
+
+
+
+
+```
+
+Describe the shape of the distribution of `salary`. Describe the shape of the distribution of `logsal`. Did taking the logarithm of salary improve the symmetry of its distribution? Explain here:
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Exercise 4: Inference for the population mean
+
+Estimate the population mean of `logsal` and give a 95% CI, using your SRS. Do this manually using the formulas from lecture/the textbook — do not rely on pre-built R functions except for `mean()`, `sd()`, `qnorm(0.975)`, or `qt(0.975, df = n - 1)`, which give you the 97.5th quantile from a standard normal distribution and a t-distribution with $n - 1$ degrees of freedom, respectively.
+
+```{r}
+# Include your code here
+
+
+
+
+
+
+
+```
+
+Give the estimate and the 95% CI and interpret them here:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Exercise 5: Inference for the population proportion
+
+`table()` uses cross-classifying factors to build a contingency table of the counts at each combination of factor levels.
+
+```{r}
+table(baseball$leagueid)
+```
+
+Estimate the population proportion of players who are pitchers, and give a 95%, using your SRS. Do this manually as well. Type `?baseball` in your console to learn more about the variables in the dataset and identify the relevant variable.
+
+```{r}
+# Include your code here
+
+
+
+
+
+
+
+
+```
+
+Give the estimate and the 95% CI and interpret them here:
+
+
+
+
+
+
+
+
+
+
+
+
+## Exercise 6: Conclusions
+
+Since you have the full dataset for the population, you can find the true mean and proportion for the population.
+
+```{r}
+# Include your code here
+
+
+
+
+
+
+
+
+```
+
+Do your CIs in exercises 4 and 5 contain the true population values? What does it mean if one of your intervals misses the true value?
+
+
+
+
+
+
+
+
+
+
+
+
+
