@@ -27,7 +27,7 @@
     return `
     <details class="week-item">
       <summary><span>Lecture ${l.n} — ${l.date}</span><span class="chev">›</span></summary>
-      <a class="week-sub" href="${root}week${l.n}/lecture/index.html">📄 ${l.title}</a>
+      <a class="week-sub" href="${root}lecture${l.n}/index.html">📄 ${l.title}</a>
     </details>`;
   }).join('');
 
@@ -44,6 +44,10 @@
     ${navLink('schedule/index.html', '📅 Schedule')}
     ${navLink('syllabus/index.html', '📋 Syllabus')}
     ${navLink('office-hours/index.html', '🕐 Office Hours')}
+
+    <div class="nav-section-label" style="margin-top:10px">Guides</div>
+    ${navLink('guides/markus.html', '📤 MarkUs')}
+    ${navLink('guides/jupyterhub.html', '🖥️ JupyterHub')}
 
     <div class="nav-section-label" style="margin-top:10px">Lecture Content</div>
     ${lecturesHtml}
