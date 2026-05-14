@@ -45,10 +45,14 @@
     ${navLink('schedule/index.html', '📅 Schedule')}
     ${navLink('syllabus/index.html', '📋 Syllabus')}
     ${navLink('office-hours/index.html', '🕐 Office Hours')}
+    ${navLink('remark-requests/index.html', '📝 Remark Requests')}
 
     <div class="nav-section-label" style="margin-top:10px">Guides</div>
     ${navLink('guides/markus.html', '📤 MarkUs')}
     ${navLink('guides/jupyterhub.html', '🖥️ JupyterHub')}
+
+    <div class="nav-section-label" style="margin-top:10px">Tests</div>
+  
 
     <div class="nav-section-label" style="margin-top:10px">Lecture Content</div>
     ${lecturesHtml}
