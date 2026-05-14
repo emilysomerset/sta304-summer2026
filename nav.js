@@ -10,6 +10,7 @@
     { n: 1, date: 'May 5', title: 'Elements of the sampling problem' },
     { n: 2, date: 'May 7', title: 'Probability sampling & SRS' },
     { n: 3, date: 'May 12', title: 'Properties of estimators under SRS' },
+    { n: 4, date: 'May 14', title: 'Stratified Sampling' },
   ];
 
   const cur = window.location.pathname;
