@@ -48,7 +48,6 @@
     ${navLink('remark-requests/index.html', '📝 Remark Requests')}
 
     <div class="nav-section-label" style="margin-top:10px">Guides</div>
-    ${navLink('guides/markus.html', '📤 MarkUs')}
     ${navLink('guides/jupyterhub.html', '🖥️ JupyterHub')}
   
 
