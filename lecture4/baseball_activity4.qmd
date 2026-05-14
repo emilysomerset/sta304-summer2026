@@ -1,0 +1,287 @@
+---
+title: "Baseball data: Learning Activity 4"
+format: pdf
+editor: visual
+---
+
+## Background
+
+This activity uses the **baseball** dataset (available in the *SDAResources* package). The dataset contains statistics on **797 baseball players** from the rosters of all major league teams in November 2004 (Forman, 2004).
+
+You will treat this file as a **population** and draw samples from it using stratified random sampling.
+
+## Getting Started
+
+Loading the dataset and the R packages. Visit the solutions for learning activity 3 on R introductions.
+
+```{r,message=FALSE}
+#| label: setup
+# Uncomment the install.packages("SDAResources") line to install the package. 
+# Comment it back after you install the package :) 
+# install.packages("SDAResources") 
+library(SDAResources)
+library(dplyr)
+
+data(baseball)         
+
+```
+
+## Exercise 1: Stratified random sample
+
+Take a stratified random sample of 150 players from the population, using proportional allocation with the different teams as strata. Save your sample as `baseball_strs` for use in future exercises. Don't forget to set your seed. I've included some code to get you started. NOTE this chunk won't run until you fill in the missing blanks.
+
+```{r}
+# Set seed for reproducibility
+set.seed(123)
+
+# Total sample size
+n <- 150
+
+# Total population size
+N <- nrow(baseball)
+
+# Step 1: Get stratum sizes (Nh = number of players per team)
+prop_alloc <- baseball %>% 
+  group_by(team) %>% 
+  summarise(Nh = n())
+
+# Step 2: Calculate proportional sample size for each stratum
+prop_alloc <- prop_alloc %>%
+  mutate(nh = round(____________))   
+
+# Step 3: Create an empty data frame to store the sample
+baseball_strs <- data.frame()
+
+# Step 4: Loop through each team and sample nh players
+for (i in 1:nrow(prop_alloc)) {
+  
+  # Get the current team name
+  current_team <- prop_alloc$team[i]          
+  
+  # Get the sample size for this team
+  current_nh <- prop_alloc$nh[i]   
+  
+  # Get the Stratum size for this team
+  current_Nh <- prop_alloc$Nh[i]   
+  
+  # Filter the data to only include the current team
+  team_data <- baseball %>%
+    filter(team == current_team)                  
+  
+  # Take a random sample of current_nh players from this team
+  team_sample <- team_data[sample(1:nrow(team_data), size = ____________), ]   
+  
+  # Append the stratum size and sample size so you have easy access for calculations later
+  team_sample$nh = current_nh
+  team_sample$Nh = current_Nh
+  
+  # Add the team sample to our growing stratified sample
+  baseball_strs <- rbind(baseball_strs, team_sample) 
+}
+
+
+```
+
+```{r}
+head(baseball_strs)
+```
+
+Describe how you selected the sample here:
+
+## Exercise 2: Inference for the population proportion
+
+Estimate the population proportion of players who are pitchers and give a 95% confidence interval, using your stratified sample. Do this manually using the formulas from lecture/the textbook — do not rely on pre-built R functions except for `mean()`, `sd()`, `qnorm(0.975)`, or `qt(0.975, df = n - 1)`, which give you the 97.5th quantile from a standard normal distribution and a t-distribution with $n - 1$ degrees of freedom, respectively.
+
+```{r}
+## Include your code here
+
+df_forcalc <- baseball_strs %>% 
+  group_by(team) %>% 
+  summarise(phat = mean(pos == "P"),
+            nh = nh[1], # just grabs the first one (they are all the same for a specific team)
+            Nh = Nh[1]) # just grabs the first one (they are all the same for a specific team)
+
+
+### Include your code here to calculate the confidence interval 
+
+phat_str = ____________
+variance_hat = ____________
+
+ci_lwr = ____________
+ci_upr = ______________
+
+ci_lwr
+ci_upr
+
+```
+
+Give the estimate and the 95% CI and interpret them here:
+
+## Exercise 3: Inference for the population mean
+
+Estimate the population mean of `logsal` and give a 95% CI, using your stratified sample with proportional allocation. Recall from learning activity 3 that `logsal` is the logarithm of `salary`. Assume the strata population variances are unknown here.
+
+Do this manually using the formulas from lecture/the textbook — do not rely on pre-built R functions except for `mean()`, `sd()`, `qnorm(0.975)`, or `qt(0.975, df = n - 1)`, which give you the 97.5th quantile from a standard normal distribution and a t-distribution with $n - 1$ degrees of freedom, respectively.
+
+```{r}
+# Include your code here
+
+baseball_strs <- baseball_strs %>% 
+  mutate(logsal = log(salary))
+
+df_forcalc <- baseball_strs %>% 
+  group_by(team) %>% 
+  summarise(ymean = mean(logsal),
+            sd = sd(logsal),
+            nh = nh[1], # just grabs the first one (they are all the same for a specific team)
+            Nh = Nh[1]) # just grabs the first one (they are all the same for a specific team)
+
+df_forcalc %>% head(5)
+
+
+### Include your code here to calculate the confidence interval 
+
+ymean_str = ____________________
+variance_hat = ________________________
+
+ci_lwr = ___________________
+ci_upr = ____________________
+
+ci_lwr
+ci_upr
+
+```
+
+Give the estimate and the 95% CI and interpret them here:
+
+## Exercise 4: Comparison to CI from Learning Activity 3
+
+How do your estimates compare with those of Learning activity 3?
+
+## Exercise 5: Justification for optimal allocation
+
+Examine the population standard deviation in each stratum. I've included some code for you to fill out.
+
+```{r}
+## Use this for code
+
+sh <- baseball %>% 
+  mutate(logsal = log(salary)) %>% 
+  group_by(team) %>% 
+  summarise(sd = sd(logsal))
+
+sh
+
+
+```
+
+Do you think optimal allocation would be worthwhile for this problem? Justify your response.
+
+## Exercise 6: Computing optimal allocations
+
+Use the population standard deviations from Exercise 5 to determine the optimal allocation for a sample of size 150.
+
+```{r}
+
+opt_alloc <- prop_alloc  
+
+# Include your code here
+
+# Adding the stratas population standard deviations
+opt_alloc <- opt_alloc %>% 
+  left_join(sh, by = "team")
+
+# Calculate optimal allocation sample size for each stratum
+opt_alloc <- opt_alloc %>%
+  mutate(nh_opt = round( _________________))   
+
+head(opt_alloc)
+```
+
+How much does the optimal allocation differ from the proportional allocation? Do you observe any patterns in how observations were re-allocated?
+
+## Exercise 7: Stratified random sample using optimal allocation
+
+Take a stratified random sample of 150 players from the population, using optimal allocation with the different teams as strata. Save your sample as `baseball_strs_opt` for use in future exercises. Don't forget to set your seed. I've included some code to get you started. NOTE this chunk won't run until you fill in the missing blanks.
+
+```{r}
+# Set seed for reproducibility
+set.seed(123)
+
+# Step 3: Create an empty data frame to store the sample
+baseball_strs_opt <- data.frame()
+
+# Step 4: Loop through each team and sample nh players
+for (i in 1:nrow(opt_alloc)) {
+  
+  # Get the current team name
+  current_team <- opt_alloc$team[i]          
+  
+  # Get the sample size for this team
+  current_nh <- opt_alloc$nh_opt[i]   
+  
+  # Get the Stratum size for this team
+  current_Nh <- opt_alloc$Nh[i]   
+  
+  # Filter the data to only include the current team
+  team_data <- baseball %>%
+    filter(team == current_team)               
+  
+  # Take a random sample of current_nh players from this team
+  team_sample <- team_data[sample(1:nrow(team_data), size = _____________), ]   
+  
+  # Append the stratum size and sample size so you have easy access for calculations later
+  team_sample$nh = current_nh
+  team_sample$Nh = current_Nh
+  
+  # Add the team sample to our growing stratified sample
+  baseball_strs_opt <- rbind(baseball_strs_opt, team_sample) 
+}
+
+
+```
+
+```{r}
+head(baseball_strs_opt)
+```
+
+## Exercise 7: Inference for the population mean under optimal allocation
+
+Estimate the population mean of `logsal` and give a 95% CI, using your stratified sample with optimal allocation. Assume strata population variances are unknown.
+
+Do this manually using the formulas from lecture/the textbook — do not rely on pre-built R functions except for `mean()`, `sd()`, `qnorm(0.975)`, or `qt(0.975, df = n - 1)`, which give you the 97.5th quantile from a standard normal distribution and a t-distribution with $n - 1$ degrees of freedom, respectively.
+
+```{r}
+# Include your code here
+
+baseball_strs_opt <- baseball_strs_opt %>% 
+  mutate(logsal = log(salary))
+
+df_forcalc <- baseball_strs_opt %>% 
+  group_by(team) %>% 
+  summarise(ymean = mean(logsal),
+            sd = sd(logsal),
+            nh = nh[1], # just grabs the first one (they are all the same for a specific team)
+            Nh = Nh[1]) # just grabs the first one (they are all the same for a specific team)
+
+df_forcalc %>% head(5)
+
+
+### Include your code here to calculate the confidence interval 
+
+ymean_str = ____________________
+variance_hat = ____________________
+
+ci_lwr = ____________________
+ci_upr = ____________________
+
+ci_lwr
+ci_upr
+
+
+
+
+
+```
+
+Give the estimate and the 95% CI and interpret them here. How do they compare with the confidence interval obtained in exercise 3?
