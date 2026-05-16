@@ -49,6 +49,9 @@
 
     <div class="nav-section-label" style="margin-top:10px">Guides</div>
     ${navLink('guides/jupyterhub.html', '🖥️ JupyterHub')}
+
+      <div class="nav-section-label" style="margin-top:10px">Tests</div>
+    ${navLink('Tests/term_test_1.html', '📝 Term test 1')}
   
 
     <div class="nav-section-label" style="margin-top:10px">Lecture Content</div>
