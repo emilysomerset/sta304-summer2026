@@ -245,7 +245,7 @@ for (i in 1:nrow(opt_alloc)) {
 head(baseball_strs_opt)
 ```
 
-## Exercise 7: Inference for the population mean under optimal allocation
+## Exercise 8: Inference for the population mean under optimal allocation
 
 Estimate the population mean of `logsal` and give a 95% CI, using your stratified sample with optimal allocation. Assume strata population variances are unknown.
 
