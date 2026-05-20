@@ -1,0 +1,207 @@
+---
+title: "Learning activity 5: Ratio Estimators with Real Census Data"
+subtitle: "Using IPUMS ACS 2024 Data for New York State"
+format: pdf
+editor: visual
+---
+
+## Introduction
+
+In class, we studied the **ratio estimator** under simple random sampling (SRS). In this activity, you will apply that theory to real survey data from the American Community Survey (ACS), accessed through [IPUMS USA](https://usa.ipums.org).
+
+The key idea behind the ratio estimator is that if we know the population total of some auxiliary variable $x$, and $x$ is correlated with our variable of interest $y$, we can use that relationship to get a better estimate of the population total of $y$.
+
+The ratio estimator for the population total is:
+
+$$\hat{\bar{y}}_r = \hat{B} \cdot t_x \quad \text{where} \quad \hat{B} = \frac{\bar{y}_S}{\bar{x}_S}$$
+
+and $t_x$ is the **known** population total of $x$. In this activity we use **annual hours worked** as our auxiliary variable and **wage income** as our variable of interest. We treat the full filtered ACS dataset as the population, draw an SRS from it, and then verify our estimates against the true population values.
+
+------------------------------------------------------------------------
+
+## Setup
+
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+library(ipumsr)
+library(survey)
+```
+
+```{r, message=FALSE, warning=FALSE}
+load('datACS.RData')
+```
+
+------------------------------------------------------------------------
+
+## Prepare the Population
+
+We filter the ACS data to private wage and salary workers in New York State with positive hours and wage income, removing the top and bottom 5% of earners to reduce the influence of extreme outliers. We then construct **annual hours worked** as our auxiliary variable. For this question we will consider this the population.
+
+```{r}
+ny_pop <- data |>
+  filter(
+    STATEFIP == 36,       # New York
+    UHRSWORK > 0,
+    INCWAGE  > 0,
+    INCWAGE  < 999998,    # 999998/999999 are IPUMS N/A codes
+    WKSWORK1 > 0,
+    CLASSWKR == 2         # private wage/salary workers
+  ) |>
+  filter(
+    INCWAGE < quantile(INCWAGE, 0.95),
+    INCWAGE > quantile(INCWAGE, 0.05)
+  ) |>
+  mutate(annual_hours = UHRSWORK * WKSWORK1)
+
+nrow(ny_pop)
+```
+
+------------------------------------------------------------------------
+
+## Draw an SRS and Check the Key Assumption
+
+We drew an SRS of size 1000 from the population. The ratio estimator requires a **proportional relationship** between $y$ and $x$.
+
+```{r}
+
+set.seed(123)
+ny_sample <- ny_pop |> sample_n(1000)
+
+B_hat = mean(ny_sample$INCWAGE)/mean(ny_sample$annual_hours)
+
+# Scatterplot
+ggplot(ny_sample, aes(x = annual_hours, y = INCWAGE)) +
+  geom_point(alpha = 0.3) +
+  geom_abline(intercept = 0, slope = B_hat, col = "red", lwd = 1, linetype="dashed")+
+  labs(
+    title = "Wage Income vs. Annual Hours Worked (SRS, n = 1000)",
+    x     = "Annual Hours Worked",
+    y     = "Wage and Salary Income ($)"
+  ) +
+  theme_minimal()
+```
+
+> **Question 1:** Examine the scatterplot. Comment on whether or not you think the proportionality assumption is reasonable here. Comment on the strength of the correlation between hours worked and income.
+
+## Efficiency of ratio estimation
+
+The ratio estimator is more efficient than the sample mean estimator under SRS when:
+
+$$R > \frac{1}{2} \cdot \frac{CV(x)}{CV(y)}$$
+
+where $CV$ is the coefficient of variation and $R$ is the population correlation. Check whether this condition holds:
+
+```{r}
+cv_x      <- sd(ny_pop$annual_hours) / mean(ny_pop$annual_hours)
+cv_y      <- sd(ny_pop$INCWAGE)      / mean(ny_pop$INCWAGE)
+threshold <- 0.5 * (cv_x / cv_y)
+R       <- cor(ny_pop$annual_hours, ny_pop$INCWAGE)
+```
+
+> **Question 2:** Does the efficiency condition hold? Interpret what this means in plain language.
+
+------------------------------------------------------------------------
+
+## Estimate the Ratio and Construct a Confidence Interval
+
+We estimate $\hat{R}$ and construct a 95% CI under SRS using standard error formula:
+
+$$\hat{V}(\hat{B}) = \left(1-\frac{n}{N}\right)\frac{s_e^2}{n\bar{x}_S^2}$$
+
+where $s_e^2 = \frac{1}{n-1}\sum_{i\in S}(y_i - \hat{B}x_i)^2$
+
+```{r}
+n     <- _________
+N     <- _________
+fpc <-  __________
+B_hat = _______________
+xbar = _________________
+
+se2 = __________________
+
+Vhat = se2/(n*xbar^2)*fpc
+SE = sqrt(Vhat)
+
+ci_upr = B_hat + qt(0.975, df = 1000-1)*SE
+ci_lwr = B_hat - qt(0.975, df = 1000-1)*SE
+
+```
+
+> **Question 3:** Interpret and give an estimate for $B$ in plain language and give a 95% confidence interval for $B$.
+
+## Verification of results using the survey package
+
+```{r}
+# Set up SRS design
+svy <- svydesign(
+  ids     = ~1,          # no clustering
+  fpc     = ~N,          # finite population correction
+  data    = ny_sample |> mutate(N = nrow(ny_pop))
+)
+
+# Ratio estimate
+ratio_svy <- svyratio(
+  numerator   = ~INCWAGE,
+  denominator = ~annual_hours,
+  design      = svy
+)
+
+print(ratio_svy)
+confint(ratio_svy, df = 999)
+```
+
+> **Question 4:** This is code to complete Q3 using the survey package. Verify that the estimate and the confidence interval you computed in Question 3 matches the one using this R package. (It should!)
+
+## Ratio Estimator for the Population Total
+
+Now we use $\hat{R}$ to estimate the **total wage income** of all private wage/salary workers in New York, and construct a CI for the total.
+
+```{r}
+
+t_x <- sum(ny_pop$annual_hours)  # known population total of annual hours
+t_y  <- sum(ny_pop$INCWAGE)       # true total income (for verification)
+
+# Point estimate
+y_bar_hat_r <- ______________
+
+# Variance of total:
+
+Vhat = se2/n*(t_x/xbar)^2*fpc
+SE = sqrt(Vhat)
+
+y_bar_hat_r + qt(0.975, df = 1000-1)*SE
+y_bar_hat_r - qt(0.975, df = 1000-1)*SE
+
+```
+
+> **Question 5:** What is the estimate for total wage income and a 95% CI? Does your 95% CI contain the true population total?
+
+## Verification of results using the survey package
+
+```{r}
+# Set up SRS design
+svy <- svydesign(
+  ids     = ~1,          # no clustering
+  fpc     = ~N,          # finite population correction
+  data    = ny_sample |> mutate(N = nrow(ny_pop))
+)
+
+# Ratio estimate
+ratio_svy <- svyratio(
+  numerator   = ~INCWAGE,
+  denominator = ~annual_hours,
+  design      = svy
+)
+
+predict(ratio_svy, total = t_x)
+```
+
+> **Question 6:** This is code to complete Q6 using the survey package. Verify that the estimate and the standard error you computed in Question 6 matches the one using this R package. (It should!)
+
+> **Question 7:** In this activity we used the full ACS dataset as the "known" population total $t_x$. In a real application where you only have a sample, where could you get $t_x$?
+
+## Submission
+
+Please submit this `.qmd` file rendered as a PDF, with all code chunks run and all questions answered. Make sure your file renders without errors before submitting.
