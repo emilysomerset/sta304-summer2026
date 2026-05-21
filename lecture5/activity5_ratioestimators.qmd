@@ -164,15 +164,15 @@ t_x <- sum(ny_pop$annual_hours)  # known population total of annual hours
 t_y  <- sum(ny_pop$INCWAGE)       # true total income (for verification)
 
 # Point estimate
-y_bar_hat_r <- ______________
+t_hat_yr <- ______________
 
 # Variance of total:
 
 Vhat = se2/n*(t_x/xbar)^2*fpc
 SE = sqrt(Vhat)
 
-y_bar_hat_r + qt(0.975, df = 1000-1)*SE
-y_bar_hat_r - qt(0.975, df = 1000-1)*SE
+t_hat_yr + qt(0.975, df = 1000-1)*SE
+t_hat_yr - qt(0.975, df = 1000-1)*SE
 
 ```
 
