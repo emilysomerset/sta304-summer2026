@@ -12,6 +12,7 @@
     { n: 3, date: 'May 12', title: 'Properties of estimators under SRS' },
     { n: 4, date: 'May 14', title: 'Stratified Sampling' },
     { n: 5, date: 'May 19', title: 'Ratio and Regression Estimation' },
+    { n: 6, date: 'May 26', title: 'Ratio and Regression Estimation and Cluster Sampling' },
   ];
 
   const cur = window.location.pathname;
