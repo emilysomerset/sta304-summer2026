@@ -54,6 +54,7 @@
 
       <div class="nav-section-label" style="margin-top:10px">Tests</div>
     ${navLink('Tests/term_test_1.html', '📝 Term test 1')}
+        ${navLink('Tests/term_test_2.html', '📝 Term test 2')}
   
 
     <div class="nav-section-label" style="margin-top:10px">Lecture Content</div>
