@@ -13,6 +13,7 @@
     { n: 4, date: 'May 14', title: 'Stratified Sampling' },
     { n: 5, date: 'May 19', title: 'Ratio and Regression Estimation' },
     { n: 6, date: 'May 26', title: 'Ratio and Regression Estimation and Cluster Sampling' },
+    { n: 7, date: 'May 28', title: 'Cluster Sampling with Equal Probability' },
   ];
 
   const cur = window.location.pathname;
