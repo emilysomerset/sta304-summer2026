@@ -14,6 +14,7 @@
     { n: 5, date: 'May 19', title: 'Ratio and Regression Estimation' },
     { n: 6, date: 'May 26', title: 'Ratio and Regression Estimation and Cluster Sampling' },
     { n: 7, date: 'May 28', title: 'Cluster Sampling with Equal Probability' },
+    { n: 8, date: 'June 2', title: 'Designing a cluster sample + Unequal Probability Sampling' },
   ];
 
   const cur = window.location.pathname;
